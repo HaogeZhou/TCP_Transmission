@@ -12,7 +12,6 @@ def receive_file(conn):
         if not chunk:
             break
         data += chunk
-
         # Check for "END" marker
         if b"END" in data:
             start_index = data.find(b"START")
@@ -26,7 +25,7 @@ def receive_file(conn):
                 filename = data[start_index:data_index].decode()
                 pre_time = data [data_indext:time_index].decode()
                 file_data = data[time_index+len(b"TIME\n"):end_index]
-
+                pro_time = round(time.time()*1000000)
                 # Save the file
                 with open(filename, "wb") as file:
                     file.write(file_data)
@@ -36,7 +35,7 @@ def receive_file(conn):
                     print(curr_time)
                     print(pre_time)
                     print(con_time)
-                    data = filename  + " " + str(con_time) + '\n'
+                    data = filename  + " " + str(con_time) + " " + str(curr_time-pro_time) + '\n'
                     save_list_file.write(data)
                 print(f"File '{filename}' received and saved.")
                 data = b""  # Reset data for the next file
